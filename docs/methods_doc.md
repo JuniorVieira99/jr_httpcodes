@@ -4,6 +4,7 @@ The `httpcodes` package provides a set of constants and functions for working wi
 
 ## Index
 
+- [Quick Usage](#quick-usage)
 - [HTTP Methods Type](#http-methods-type)
 - [HTTP Methods Description Type](#http-methods-description-type)
 - [HTTP Methods Constants](#http-methods-constants)
@@ -17,6 +18,71 @@ The `httpcodes` package provides a set of constants and functions for working wi
   - [GetMethodDescription](#getmethoddescription)
   - [RegisterMethod](#registermethod)
   - [DeleteRegisteredMethod](#deleteregisteredmethod)
+
+## Quick Usage
+
+**Calling**:
+
+To call a method, use the `Method` type and the method constants.
+
+```go
+method := codes.GET
+method2 := codes.POST
+```
+
+**Description**:
+
+To get a human-readable description of a method, use the `GetMethodDescription` function.
+
+```go
+desc := codes.GetMethodDescription(codes.GET)
+fmt.Println(desc)
+```
+
+Output:
+
+```shell
+Retrieve data from server
+```
+
+Use the `String`or `Print`method for string representation or direct print.
+
+```go
+myCodeStr := codes.GET.String()
+codes.GET.Print()
+```
+
+Output:
+
+```shell
+GET -> Retrieve data from server
+```
+
+**Registering**:
+
+To register a custom method, use the `RegisterMethod` function.
+
+```go
+// Make the custom method
+myCustomMethod := codes.Method("CUSTOM")
+myCustomDesc := codes.Description("My Custom Method")
+// Register the custom method
+codes.RegisterMethod(myCustomMethod, myCustomDesc)
+// Get the description
+fmt.Println(codes.GetMethodDescription(myCustomMethod))
+```
+
+Output:
+
+```shell
+My Custom Method
+```
+
+To delete a custom method, use the `DeleteRegisteredMethod` function.
+
+```go
+codes.DeleteRegisteredMethod(myCustomMethod)
+```
 
 ## HTTP Methods Type
 

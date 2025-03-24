@@ -282,7 +282,7 @@ var StatusDescriptionMap = map[StatusCode]Description{
 func RegisterStatusCode(code StatusCode, desc Description) {
 	mu.Lock()
 	// Skip Built In Codes
-	if code >= 100 || code <= 600 {
+	if code >= 100 && code <= 600 {
 		mu.Unlock()
 		return
 	}
@@ -298,7 +298,7 @@ func RegisterStatusCode(code StatusCode, desc Description) {
 func DeleteStatusCode(code StatusCode) {
 	mu.Lock()
 	// Skip Built In Codes
-	if code >= 100 || code <= 600 {
+	if code >= 100 && code <= 600 {
 		mu.Unlock()
 		return
 	}
@@ -556,8 +556,8 @@ func StringMethodMap(m map[Method]Description) string {
 	var sb strings.Builder
 	sb.Grow(len(m) * 20)
 
-	for k, v := range m {
-		sb.WriteString(fmt.Sprintf("%s -> %s\n", k, v))
+	for k, _ := range m {
+		sb.WriteString(fmt.Sprintf("%s\n", k.String()))
 	}
 	return sb.String()
 }

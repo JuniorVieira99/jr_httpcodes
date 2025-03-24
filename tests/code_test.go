@@ -137,9 +137,13 @@ func TestMethodMethods(t *testing.T) {
 
 func TestRegistrationFunctions(t *testing.T) {
 	// Test RegisterStatusCode
-	customCode := codes.StatusCode(599)
+	customCode := codes.StatusCode(700)
 	customDesc := codes.Description("Custom status code")
 	codes.RegisterStatusCode(customCode, customDesc)
+
+	// Check insertion
+	_, ok := codes.StatusDescriptionMap[customCode]
+	assert.True(t, ok)
 	assert.Equal(t, string(customDesc), codes.GetStatusInfo(customCode))
 
 	// Test RegisterMethod
@@ -147,6 +151,36 @@ func TestRegistrationFunctions(t *testing.T) {
 	customMethodDesc := codes.Description("Custom method")
 	codes.RegisterMethod(customMethod, customMethodDesc)
 	assert.Equal(t, string(customMethodDesc), codes.GetMethodDescription(customMethod))
+
+	// Check insertion
+	_, ok = codes.MethodDescriptionMap[customMethod]
+	assert.True(t, ok)
+}
+
+func TestDeleteRegisteredFunctions(t *testing.T) {
+	// Add custom code
+	customCode := codes.StatusCode(700)
+	customDesc := codes.Description("Custom status code")
+	codes.RegisterStatusCode(customCode, customDesc)
+
+	// Test DeleteStatusCode
+	codes.DeleteStatusCode(700)
+
+	// Check deletion
+	_, ok := codes.StatusDescriptionMap[customCode]
+	assert.False(t, ok)
+
+	// Add custom method
+	customMethod := codes.Method("CUSTOM")
+	customMethodDesc := codes.Description("Custom method")
+	codes.RegisterMethod(customMethod, customMethodDesc)
+
+	// Test DeleteMethod
+	codes.DeleteMethod("CUSTOM")
+
+	// Check deletion
+	_, ok = codes.MethodDescriptionMap[customMethod]
+	assert.False(t, ok)
 }
 
 func TestUtilityFunctions(t *testing.T) {
@@ -156,6 +190,11 @@ func TestUtilityFunctions(t *testing.T) {
 		codes.NotFound: codes.NotFoundDesc,
 	}
 
+	testMethodMap := map[codes.Method]codes.Description{
+		codes.GET:    codes.GETDesc,
+		codes.DELETE: codes.DELETEDesc,
+	}
+
 	// Test StringStatusCodeMap function
 	mapStr := codes.StringStatusCodeMap(testMap)
 	assert.Contains(t, mapStr, "200 ->")
@@ -163,4 +202,12 @@ func TestUtilityFunctions(t *testing.T) {
 
 	// StringStatusCodeMap is tested only for coverage as it prints to console
 	codes.PrintStatusCodeMap(testMap)
+
+	// Test StringMethodMap function
+	mapStr = codes.StringMethodMap(testMethodMap)
+	assert.Contains(t, mapStr, "GET ->")
+	assert.Contains(t, mapStr, "DELETE ->")
+
+	// StringMethodMap is tested only for coverage as it prints to console
+	codes.PrintMethodMap(testMethodMap)
 }

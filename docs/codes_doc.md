@@ -4,6 +4,7 @@ The `httpcodes` package provides a set of constants and functions for working wi
 
 ## Index
 
+- [Quick Usage](#quick-usage)
 - [HTTP Status Codes](#http-status-codes)
   - [Index](#index)
     - [StatusCode Type](#statuscode-type)
@@ -25,6 +26,88 @@ The `httpcodes` package provides a set of constants and functions for working wi
       - [CallMap](#callmap)
       - [RegisterStatusCode](#registerstatuscode)
       - [DeleteStatusCode](#deletestatuscode)
+
+## Quick Usage
+
+**Calling**:
+
+To call a constant use the syntax `code.<status_code>`:
+
+```go
+// For a constant
+myCode := codes.Ok
+myCode2 := codes.InternalServerError
+// For a struct object
+type example struct{
+    name string
+    code codes.StatusCode
+}
+```
+
+**Description**:
+
+Get a description of a status code:
+
+```go
+info := codes.GetStatusInfo(codes.Ok)
+fmt.Println(info)
+```
+
+Output:
+
+```shell
+Request succeeded and response contains requested data
+```
+
+Get a string representation of the completed status code:
+
+```go
+info := codes.Ok.String()
+fmt.Println(info)
+```
+
+Output:
+
+```shell
+200 -> Request succeeded and response contains requested data
+```
+
+You could also use the `Print` function to print the status code to the console:
+
+```go
+codes.Ok.Print()
+```
+
+**Register:**
+
+To add or delete a custom status code, use the `RegisterStatusCode` and `DeleteStatusCode` functions:
+
+```go
+// Making a custom status code
+codeCustom := codes.StatusCode(700)
+descCustom := codes.Description("Custom status code")
+
+// Adding the custom status code to the register
+codes.RegisterStatusCode(codeCustom, descCustom)
+
+// Deleting the custom status code from the register
+codes.DeleteStatusCode(codeCustom)
+// Or
+codes.DeleteStatusCode(700)
+```
+
+**Validation**:
+
+To validate a status code, use the `IsValidStatusCode` function, this function will check codes between 100 and 599:
+
+```go
+ok := codes.IsValidStatusCode(codes.StatusCode(999))
+if ok {
+    fmt.Println("Valid status code")
+} else {
+    fmt.Println("Invalid status code")
+}
+```
 
 ## StatusCode Type
 

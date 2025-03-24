@@ -38,6 +38,7 @@ go get github.com/JuniorVieira99/jr_httpcodes
 - Validation utilities for status codes and methods
 - Thread-safe registration of custom codes and methods
 - Utility functions for debugging and logging
+**NOTE**: Check the docs folder for detailed information.
 
 ## Quick Start
 
@@ -48,7 +49,7 @@ import (
 )
 
 func main() {
-    fmt.Println(codes.GetStatusInfo(codes.OK)) // Output: "Request succeeded and response contains requested data"
+    codes.Ok.Print() // Output: "OK -> Request succeeded and response contains requested data"
 }
 ```
 
@@ -64,6 +65,9 @@ import (
 
 func main() {
     
+    // Call a status code
+    code := codes.OK
+
     // Check status code category
     if codes.IsSuccess(codes.OK) {
         fmt.Println("This is a success status code")
@@ -74,17 +78,24 @@ func main() {
     // Output: "Requested resource could not be found"
     
     // Validate a status code
-    err := codes.ValidateStatusCode(codes.StatusCode(999))
-    if err != nil {
+    ok := codes.IsValidStatusCode(codes.StatusCode(999))
+    if !ok {
         fmt.Println("Invalid status code")
     }
     
     // String representation
-    fmt.Println(codes.InternalServerError.String())
+    myCode:=codes.InternalServerError.String()
+    // Direct print
+    codes.InternalServerError.Print()
     // Output: "500 -> Server encountered unexpected condition"
     
     // Register a custom status code
-    codes.RegisterStatusCode(codes.StatusCode(599), codes.Description("My Custom Error"))
+    customCode := codes.StatusCode(599)
+    customDesc := codes.Description("My Custom Error")
+    codes.RegisterStatusCode(customCode, customDesc)
+
+    // Delete custom status code
+    codes.DeleteStatusCode(customCode)
 }
 ```
 
@@ -97,9 +108,18 @@ import (
 )
 
 func main() {
+    // Call a method
+    method := codes.POST
+
     // Get method description
-    fmt.Println(codes.GetMethodDescription(codes.POST))
+    fmt.Println(codes.GetMethodDescription(method))
     // Output: "Send data to server for processing"
+
+    // String representation
+    methodStr:= codes.GET.String()
+    // Direct print
+    codes.GET.Print()
+    // Output: "GET -> Retrieve data from server"
     
     // Validate a method
     err := codes.ValidateMethod(codes.Method("INVALID"))
@@ -107,12 +127,13 @@ func main() {
         fmt.Println("Invalid method")
     }
     
-    // String representation
-    fmt.Println(codes.GET.String())
-    // Output: "GET -> Retrieve data from server"
-    
     // Register a custom method
-    codes.RegisterMethod(codes.Method("CUSTOM"), codes.Description("My Custom Method"))
+    customMethod := codes.Method("CUSTOM")
+    customDesc := codes.Description("My Custom Method")
+    codes.RegisterMethod(customMethod, customDesc)
+
+    // Delete custom method
+    codes.DeleteMethod(customMethod)
 }
 ```
 
