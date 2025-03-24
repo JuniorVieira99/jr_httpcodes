@@ -41,15 +41,6 @@ jobs:
     - name: Run race conditions
       run: go test -race -v ./tests
 
-    - name: Run coverage
-      run: go test -coverprofile=coverage.out ./tests
-
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: coverage.out
-    
     - name: Run static analysis
       run: |
         curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.52.2
