@@ -31,7 +31,13 @@ package codes
 import (
 	"fmt"
 	"strings"
+	"sync"
 )
+
+// Package Mutex
+// --------------------------------------------------------------------
+
+var mu sync.RWMutex
 
 // Types
 // --------------------------------------------------------------------
@@ -275,7 +281,27 @@ var StatusDescriptionMap = map[StatusCode]Description{
 // The function is intended for use by other packages that want to add status codes
 // that are not part of the standard HTTP/1.1 specification.
 func RegisterStatusCode(code StatusCode, desc Description) {
+	mu.Lock()
+	if _, exists := StatusDescriptionMap[code]; exists {
+		mu.Unlock()
+		return
+	}
 	StatusDescriptionMap[code] = desc
+	mu.Unlock()
+}
+
+// DeleteStatusCode removes a custom status code from the package's map of status codes.
+// It takes a StatusCode as a parameter and deletes the code from the map if it exists.
+// The function is intended for use by other packages that want to remove status codes
+// that are not part of the standard HTTP/1.1 specification.
+func DeleteStatusCode(code StatusCode) {
+	mu.Lock()
+	if _, exists := StatusDescriptionMap[code]; !exists {
+		mu.Unlock()
+		return
+	}
+	delete(StatusDescriptionMap, code)
+	mu.Unlock()
 }
 
 // Description String func
@@ -411,7 +437,27 @@ var MethodDescriptionMap = map[Method]Description{
 // The function is intended for use by other packages that want to add HTTP methods
 // that are not part of the standard HTTP/1.1 specification.
 func RegisterMethod(method Method, description Description) {
+	mu.Lock()
+	if _, exists := MethodDescriptionMap[method]; exists {
+		mu.Unlock()
+		return
+	}
 	MethodDescriptionMap[method] = description
+	mu.Unlock()
+}
+
+// DeleteMethod removes an HTTP method from the package's map of methods.
+// It takes a Method as a parameter and deletes the method from the map
+// if it exists. The function is thread-safe and can be called from multiple
+// goroutines.
+func DeleteMethod(method Method) {
+	mu.Lock()
+	if _, exists := MethodDescriptionMap[method]; !exists {
+		mu.Unlock()
+		return
+	}
+	delete(MethodDescriptionMap, method)
+	mu.Unlock()
 }
 
 // GetMethodDescription returns a human-readable description of the HTTP method.
@@ -455,7 +501,7 @@ func (m Method) CallMap() map[Method]Description {
 // StringMap takes a map of StatusCode to Description and returns a string
 // representation of it, with each key-value pair separated by a line break.
 // Each key-value pair is formatted as "code -> description".
-func StringMap(m map[StatusCode]Description) string {
+func StringStatusCodeMap(m map[StatusCode]Description) string {
 	var sb strings.Builder
 	sb.Grow(len(m) * 20)
 
@@ -474,6 +520,32 @@ func StringMap(m map[StatusCode]Description) string {
 //
 //	m := codes.StatusDescriptionMap
 //	codes.PrintMap(m) // Output: "100 -> Continue ..."
-func PrintMap(m map[StatusCode]Description) {
-	fmt.Println(StringMap(m))
+func PrintStatusCodeMap(m map[StatusCode]Description) {
+	fmt.Println(StringStatusCodeMap(m))
+}
+
+// StringMethodMap takes a map of Method to Description and returns a string
+// representation of it, with each key-value pair separated by a line break.
+// Each key-value pair is formatted as "method -> description".
+func StringMethodMap(m map[Method]Description) string {
+	var sb strings.Builder
+	sb.Grow(len(m) * 20)
+
+	for k, v := range m {
+		sb.WriteString(fmt.Sprintf("%s -> %s\n", k, v))
+	}
+	return sb.String()
+}
+
+// PrintMethodMap prints the map of methods to their descriptions to the console.
+//
+// It takes a map of methods to their descriptions and prints it to the console.
+// The output is formatted as "method -> description" with one entry per line.
+//
+// Example:
+//
+//	m := codes.MethodDescriptionMap
+//	codes.PrintMethodMap(m) // Output: "GET -> Retrieve data from server ..."
+func PrintMethodMap(m map[Method]Description) {
+	fmt.Println(StringMethodMap(m))
 }
