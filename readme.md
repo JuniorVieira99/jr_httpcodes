@@ -136,6 +136,7 @@ For online documentation check the [GoDoc](https://pkg.go.dev/github.com/JuniorV
 | `ValidateStatusCode(code StatusCode) error` | Returns error for invalid status codes |
 | `GetStatusInfo(code StatusCode) string` | Returns human-readable description |
 | `RegisterStatusCode(code StatusCode, desc Description)` | Registers a custom status code |
+| `DeleteStatusCode(code StatusCode)` | Deletes a custom status code |
 | `String() string` | Returns human-readable representation |
 | `Print() string` | Prints the status code to the console |
 | `CallMap() map[StatusCode]Description` | A map of status codes to status descriptions |
@@ -149,6 +150,7 @@ For online documentation check the [GoDoc](https://pkg.go.dev/github.com/JuniorV
 | `ValidateMethod(method Method) error` | Returns error for invalid methods |
 | `GetMethodDescription(method Method) string` | Returns human-readable description |
 | `RegisterMethod(method Method, desc Description)` | Registers a custom method |
+| `DeleteMethod(method Method)` | Deletes a custom method |
 | `String() string` | Returns human-readable representation |
 | `Print() string` | Prints the method to the console |
 | `CallMap() map[Method]Description` | A map of method names to method functions |
@@ -211,6 +213,9 @@ func main()
     // Register a custom status code
     codes.RegisterStatusCode(codes.StatusCode(599), codes.Description("My Custom Error"))
 
+    // Delete custom status code
+    codes.DeleteStatusCode(codes.StatusCode(599))
+
     // METHOD
     // ----------------
     
@@ -230,6 +235,9 @@ func main()
     
     // Register a custom method
     codes.RegisterMethod(codes.Method("CUSTOM"), codes.Description("My Custom Method")) 
+
+    // Delete custom method
+    codes.DeleteMethod(codes.Method("CUSTOM"))
 }
 ```
 

@@ -276,26 +276,33 @@ var StatusDescriptionMap = map[StatusCode]Description{
 	NetworkAuthenticationRequired: NetworkAuthenticationRequiredDesc,
 }
 
-// RegisterStatusCode adds a custom status code to the package's map of status codes.
-// It takes a StatusCode and a Description as parameters and adds the code to the map.
-// The function is intended for use by other packages that want to add status codes
-// that are not part of the standard HTTP/1.1 specification.
+// RegisterStatusCode registers a custom status code to the package's map of status codes.
+//
+// Note: Do not register built-in status codes (100-600).
 func RegisterStatusCode(code StatusCode, desc Description) {
 	mu.Lock()
-	if _, exists := StatusDescriptionMap[code]; exists {
+	// Skip Built In Codes
+	if code >= 100 || code <= 600 {
 		mu.Unlock()
 		return
 	}
+
 	StatusDescriptionMap[code] = desc
 	mu.Unlock()
 }
 
 // DeleteStatusCode removes a custom status code from the package's map of status codes.
-// It takes a StatusCode as a parameter and deletes the code from the map if it exists.
-// The function is intended for use by other packages that want to remove status codes
-// that are not part of the standard HTTP/1.1 specification.
+// It takes a StatusCode as a parameter and deletes it from the map if it exists
+// and is not a built-in status code (100-600). The function is thread-safe and can
+// be called concurrently from multiple goroutines.
 func DeleteStatusCode(code StatusCode) {
 	mu.Lock()
+	// Skip Built In Codes
+	if code >= 100 || code <= 600 {
+		mu.Unlock()
+		return
+	}
+
 	if _, exists := StatusDescriptionMap[code]; !exists {
 		mu.Unlock()
 		return
@@ -433,25 +440,43 @@ var MethodDescriptionMap = map[Method]Description{
 }
 
 // RegisterMethod adds a custom HTTP method to the package's map of methods.
-// It takes a Method and a Description as parameters and adds the method to the map.
-// The function is intended for use by other packages that want to add HTTP methods
-// that are not part of the standard HTTP/1.1 specification.
+// It locks the map, checks if the method is empty or a standard method, and if not,
+// adds it to the MethodDescriptionMap with its description. The function ensures
+// thread safety using a mutex lock and unlock mechanism.
 func RegisterMethod(method Method, description Description) {
 	mu.Lock()
-	if _, exists := MethodDescriptionMap[method]; exists {
+	if method == "" {
 		mu.Unlock()
 		return
 	}
+
+	if method == GET || method == POST || method == PUT || method == DELETE || method == PATCH || method == HEAD || method == OPTIONS || method == CONNECT || method == TRACE {
+		mu.Unlock()
+		return
+	}
+
 	MethodDescriptionMap[method] = description
 	mu.Unlock()
 }
 
-// DeleteMethod removes an HTTP method from the package's map of methods.
-// It takes a Method as a parameter and deletes the method from the map
-// if it exists. The function is thread-safe and can be called from multiple
+// DeleteMethod removes a custom HTTP method from the package's map of methods.
+// It takes a Method as a parameter, locks the map, checks if the method is empty
+// or a standard method, and if not, deletes it from the MethodDescriptionMap.
+// The function is thread-safe and can be called concurrently from multiple
 // goroutines.
 func DeleteMethod(method Method) {
 	mu.Lock()
+
+	if method == "" {
+		mu.Unlock()
+		return
+	}
+
+	if method == GET || method == POST || method == PUT || method == DELETE || method == PATCH || method == HEAD || method == OPTIONS || method == CONNECT || method == TRACE {
+		mu.Unlock()
+		return
+	}
+
 	if _, exists := MethodDescriptionMap[method]; !exists {
 		mu.Unlock()
 		return
