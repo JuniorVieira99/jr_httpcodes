@@ -1,4 +1,4 @@
-module jr_httpcodes
+module github.com/JuniorVieira99/jr_httpcodes
 
 go 1.21
 

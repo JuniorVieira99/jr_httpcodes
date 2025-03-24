@@ -1,9 +1,9 @@
 package code_test
 
 import (
-	"jr_httpcodes/codes"
 	"testing"
 
+	"github.com/JuniorVieira99/jr_httpcodes/codes"
 	"github.com/stretchr/testify/assert"
 )
 
