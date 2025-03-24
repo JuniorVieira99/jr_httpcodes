@@ -1,10 +1,10 @@
 # HTTP Codes Library for Go
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/JuniorVieira99/jr_httpcodes)
-![GoDoc](https://pkg.go.dev/badge/github.com/JuniorVieira99/jr_httpcodes)
-![Go Report Card](https://goreportcard.com/badge/github.com/JuniorVieira99/jr_httpcodes)
+[![GoDoc](https://godoc.org/github.com/JuniorVieira99/jr_httpcodes?status.svg)](https://godoc.org/github.com/JuniorVieira99/jr_httpcodes)
+[![Go Report Card](https://goreportcard.com/badge/github.com/JuniorVieira99/jr_httpcodes)](https://goreportcard.com/report/github.com/JuniorVieira99/jr_httpcodes)
 [![jr_httpcodes_tests](https://github.com/JuniorVieira99/jr_httpcodes/actions/workflows/tests_workflow.yaml/badge.svg)](https://github.com/JuniorVieira99/jr_httpcodes/actions/workflows/tests_workflow.yaml)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![GitHub](https://img.shields.io/github/license/JuniorVieira99/jr_httpcodes)
 
 A lightweight, type-safe Go library for working with HTTP status codes and HTTP methods. This library provides constants, validation utilities, and human-readable descriptions for all standard HTTP status codes and methods.
 
@@ -38,7 +38,7 @@ go get github.com/JuniorVieira99/jr_httpcodes
 - Validation utilities for status codes and methods
 - Thread-safe registration of custom codes and methods
 - Utility functions for debugging and logging
-**NOTE**: Check the docs folder for detailed information.
+- **NOTE**: Check the docs folder for detailed information.
 
 ## Quick Start
 
