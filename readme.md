@@ -38,7 +38,7 @@ go get github.com/JuniorVieira99/jr_httpcodes
 - Validation utilities for status codes and methods
 - Thread-safe registration of custom codes and methods
 - Utility functions for debugging and logging
-**NOTE**: Check the docs folder for detailed information.
+- **NOTE**: Check the docs folder for detailed information.
 
 ## Quick Start
 
