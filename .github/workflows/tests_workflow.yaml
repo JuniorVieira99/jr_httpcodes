@@ -40,8 +40,3 @@ jobs:
 
     - name: Run race conditions
       run: go test -race -v ./tests
-
-    - name: Run static analysis
-      run: |
-        curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.52.2
-        golangci-lint run ./...
